@@ -1,2 +1,2 @@
 # travelapp-java
-Simple new facing android project using MVP
+Simple android project using MVP that fetches train data from transportapi
