@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_depart_live"
+            android:icon="@drawable/ic_directions_railway_black_24dp"
+            android:title="@string/live_depart" />
+        <item
+            android:id="@+id/nav_nearest_stations"
+            android:icon="@drawable/ic_my_location_black_24dp"
+            android:title="@string/nearest_station" />
+    </group>
+
+</menu>
