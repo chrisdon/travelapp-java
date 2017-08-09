@@ -5,6 +5,8 @@ import android.location.Location;
 
 import java.util.Calendar;
 
+import uk.co.donnellyit.travelappjava.R;
+
 /**
  * Created by chrisdonnelly on 13/07/2017.
  */
@@ -16,9 +18,10 @@ public class FakeLocationInteractor implements LocationInteractor {
         long oldTime = Calendar.getInstance().getTimeInMillis();
         Location newLoc = oldLoc;
         long newTime = Calendar.getInstance().getTimeInMillis();
-        // lat=51.3562191&lon=-0.141687
-        newLoc.setLatitude(51.3562191);
-        newLoc.setLongitude(-0.141687);
+        double latitude = Double.parseDouble(context.getString(R.string.fake_lat));
+        newLoc.setLatitude(latitude);
+        double longitude = Double.parseDouble(context.getString(R.string.fake_long));
+        newLoc.setLongitude(longitude);
         listener.onUpdate(oldLoc, oldTime, newLoc, newTime);
     }
 }

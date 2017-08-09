@@ -20,4 +20,7 @@
     <string name="server_error">Unable to fetch data from server</string>
     <string name="distance">%1$sm</string>
     <string name="station_error">Unable to fetch station list, soz</string>
+
+    <string name="fake_long">-0.1417277</string>
+    <string name="fake_lat">51.3564274</string>
 </resources>

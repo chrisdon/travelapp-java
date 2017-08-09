@@ -140,6 +140,8 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onListFragmentInteraction(StationJson station) {
-
+        mCurrentFragment = DEPARTURE_TAG;
+        Fragment departureFragment = DeparturesFragment.newInstance(station.getStation_code());
+        replaceFragment(departureFragment, DEPARTURE_TAG);
     }
 }

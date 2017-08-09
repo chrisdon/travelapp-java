@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.LinearLayout;
@@ -66,7 +67,7 @@ public class DeparturesFragment extends TAFragment<DeparturesContract.Presenter>
     public static DeparturesFragment newInstance(String stationCode) {
         DeparturesFragment fragment = new DeparturesFragment();
         Bundle args = new Bundle();
-        args.putString(stationCode, ARG_CRS);
+        args.putString(ARG_CRS, stationCode);
         fragment.setArguments(args);
         return fragment;
     }
@@ -74,8 +75,8 @@ public class DeparturesFragment extends TAFragment<DeparturesContract.Presenter>
     @SuppressWarnings("unused")
     public static DeparturesFragment newInstance() {
         DeparturesFragment fragment = new DeparturesFragment();
-        Bundle args = new Bundle();
-        fragment.setArguments(args);
+        //Bundle args = new Bundle();
+        //fragment.setArguments(args);
         return fragment;
     }
 
@@ -120,9 +121,13 @@ public class DeparturesFragment extends TAFragment<DeparturesContract.Presenter>
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                onItemPressed(mStations.get(mStationIndex));
+                onItemPressed(mStations.get(mStationIndex).getCrs());
             }
         });
+
+        if(mCrs != null) {
+            onItemPressed(mCrs);
+        }
     }
 
     @Override
@@ -139,8 +144,11 @@ public class DeparturesFragment extends TAFragment<DeparturesContract.Presenter>
 
     @Override
     public void displayLiveDepartures(TrainLiveResponse response) {
+        getActivity().setTitle(response.getStation_name());
         mListAdapter = new MyDeparturesRecyclerViewAdapter(response.getDepartures().getAll(), mListener);
         mRecyclerView.setAdapter(mListAdapter);
+
+        hideKeyboard();
     }
 
     @Override
@@ -149,6 +157,8 @@ public class DeparturesFragment extends TAFragment<DeparturesContract.Presenter>
         StationAdapter stationAdapter = new StationAdapter(getContext(), R.layout.item_station, new ArrayList<>(stations));
         mStationsACTV.setAdapter(stationAdapter);
         mStationsACTV.setOnItemClickListener(this);
+
+
     }
 
     @Override
@@ -158,12 +168,14 @@ public class DeparturesFragment extends TAFragment<DeparturesContract.Presenter>
 
     @Override
     public void showProgress() {
-
+        if(!mSwipeRefreshLayout.isRefreshing()) {
+            mSwipeRefreshLayout.setRefreshing(true);
+        }
     }
 
     @Override
     public void hideProgress() {
-
+        mSwipeRefreshLayout.setRefreshing(false);
     }
 
     @Override
@@ -177,8 +189,8 @@ public class DeparturesFragment extends TAFragment<DeparturesContract.Presenter>
         presenter.requestDepartures(stationInList.getCrs());
     }
 
-    private void onItemPressed(Station station) {
-        presenter.requestDepartures(station.getCrs());
+    private void onItemPressed(String crs) {
+        presenter.requestDepartures(crs);
     }
 
     private Station getStation(Station tappedStation) {
@@ -189,6 +201,15 @@ public class DeparturesFragment extends TAFragment<DeparturesContract.Presenter>
         }
 
         return null;
+    }
+
+    private void hideKeyboard() {
+        // Check if no view has focus:
+        View view = getActivity().getCurrentFocus();
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
     }
 
     /**
